@@ -22,19 +22,34 @@
             --slate-700: #334155;
             --slate-800: #1e293b;
             --slate-900: #0f172a;
+            --blue-50: #eff6ff;
+            --blue-100: #dbeafe;
             --blue-600: #2563eb;
             --blue-700: #1d4ed8;
+            --emerald-50: #ecfdf5;
             --emerald-500: #10b981;
+            --emerald-600: #059669;
+            --rose-50: #fff1f2;
             --rose-500: #f43f5e;
+            --amber-50: #fffbeb;
             --amber-500: #f59e0b;
+            --indigo-600: #4f46e5;
+            
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: var(--slate-50);
             color: var(--slate-900);
             overflow: hidden;
             height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
 
         /* Login Styles */
@@ -53,11 +68,11 @@
             position: absolute;
             top: -10%;
             left: -10%;
-            width: 40%;
-            height: 40%;
-            background: rgba(37, 99, 235, 0.2);
-            filter: blur(120px);
-            border-radius: 50%;
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, transparent 70%);
+            filter: blur(80px);
+            z-index: 0;
         }
 
         #login-screen::after {
@@ -65,87 +80,105 @@
             position: absolute;
             bottom: -10%;
             right: -10%;
-            width: 40%;
-            height: 40%;
-            background: rgba(79, 70, 229, 0.2);
-            filter: blur(120px);
-            border-radius: 50%;
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(circle, rgba(79, 70, 229, 0.15) 0%, transparent 70%);
+            filter: blur(80px);
+            z-index: 0;
         }
 
         .login-card {
-            background: white;
-            border-radius: 1.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
             width: 100%;
-            max-width: 400px;
-            padding: 2.5rem;
+            max-width: 420px;
+            padding: 3rem;
             z-index: 10;
-            border: 1px solid var(--slate-200);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         /* App Layout */
         #app-container {
             display: none;
             height: 100vh;
+            width: 100vw;
         }
 
         .sidebar {
-            width: 260px;
+            width: 280px;
             background-color: var(--slate-900);
             color: var(--slate-300);
             display: flex;
-            flex-row: column;
-            transition: width 0.3s ease;
+            flex-direction: column;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             flex-shrink: 0;
             height: 100%;
+            border-right: 1px solid var(--slate-800);
         }
 
         .sidebar.collapsed {
-            width: 80px;
+            width: 88px;
         }
 
         .sidebar-header {
-            padding: 1.5rem;
+            padding: 2rem 1.5rem;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 1rem;
         }
 
         .logo-box {
-            width: 32px;
-            height: 32px;
-            background-color: var(--blue-600);
-            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--blue-600), var(--indigo-600));
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .nav-section-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--slate-500);
+            padding: 1.5rem 1.5rem 0.5rem;
+            display: block;
+        }
+
+        .sidebar.collapsed .nav-section-label {
+            display: none;
         }
 
         .nav-link {
             color: var(--slate-400);
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            margin: 0.25rem 0.75rem;
+            padding: 0.875rem 1.25rem;
+            border-radius: 10px;
+            margin: 0.125rem 1rem;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 1rem;
             text-decoration: none;
             font-weight: 500;
-            font-size: 0.875rem;
-            transition: all 0.2s;
+            font-size: 0.9375rem;
+            transition: all 0.2s ease;
         }
 
         .nav-link:hover {
-            background-color: var(--slate-800);
+            background-color: rgba(255, 255, 255, 0.05);
             color: white;
         }
 
         .nav-link.active {
             background-color: var(--blue-600);
             color: white;
-            box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.3);
+            box-shadow: 0 8px 20px -6px rgba(37, 99, 235, 0.5);
         }
 
         .main-content {
@@ -153,122 +186,191 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            background-color: var(--slate-50);
         }
 
         .header {
-            height: 64px;
-            background: white;
+            height: 72px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
             border-bottom: 1px solid var(--slate-200);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 1.5rem;
+            padding: 0 2rem;
             flex-shrink: 0;
+            z-index: 20;
         }
 
         .content-area {
             flex-grow: 1;
             overflow-y: auto;
-            padding: 1.5rem;
+            padding: 2rem;
         }
 
         /* Utility Classes */
         .stat-card {
             background: white;
             border: 1px solid var(--slate-200);
-            border-radius: 1rem;
-            padding: 1.25rem;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .icon-bg {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.2s ease;
         }
 
-        .bg-blue-light { background-color: #eff6ff; color: var(--blue-600); }
-        .bg-emerald-light { background-color: #ecfdf5; color: var(--emerald-500); }
-        .bg-amber-light { background-color: #fffbeb; color: var(--amber-500); }
+        .bg-blue-light { background-color: var(--blue-50); color: var(--blue-600); }
+        .bg-emerald-light { background-color: var(--emerald-50); color: var(--emerald-500); }
+        .bg-amber-light { background-color: var(--amber-50); color: var(--amber-500); }
         .bg-purple-light { background-color: #faf5ff; color: #9333ea; }
 
         .table-container {
             background: white;
             border: 1px solid var(--slate-200);
-            border-radius: 1rem;
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-sm);
         }
 
         .table thead th {
             background-color: var(--slate-50);
-            font-size: 0.75rem;
-            font-weight: 600;
+            font-size: 0.7rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.075em;
             color: var(--slate-500);
-            padding: 1rem;
+            padding: 1.25rem 1.5rem;
             border-bottom: 1px solid var(--slate-200);
         }
 
         .table tbody td {
-            padding: 1rem;
-            font-size: 0.875rem;
+            padding: 1.25rem 1.5rem;
+            font-size: 0.9375rem;
             vertical-align: middle;
+            border-bottom: 1px solid var(--slate-100);
         }
 
         .status-pill {
-            padding: 0.25rem 0.5rem;
+            padding: 0.375rem 0.75rem;
             border-radius: 9999px;
-            font-size: 0.625rem;
+            font-size: 0.65rem;
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.025em;
         }
 
-        .pill-emerald { background-color: #dcfce7; color: #166534; }
-        .pill-amber { background-color: #fef3c7; color: #92400e; }
-        .pill-blue { background-color: #dbeafe; color: #1e40af; }
-        .pill-slate { background-color: #f1f5f9; color: #475569; }
+        .pill-emerald { background-color: var(--emerald-50); color: var(--emerald-600); }
+        .pill-amber { background-color: var(--amber-50); color: var(--amber-500); }
+        .pill-blue { background-color: var(--blue-50); color: var(--blue-600); }
+        .pill-slate { background-color: var(--slate-100); color: var(--slate-600); }
+        .pill-danger { background-color: var(--rose-50); color: var(--rose-500); }
 
         .machine-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-            gap: 0.75rem;
+            grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+            gap: 1rem;
         }
 
         .machine-box {
             aspect-ratio: 1;
-            border-radius: 8px;
+            border-radius: 12px;
             border: 1px solid var(--slate-200);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 0.625rem;
+            font-size: 0.75rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
 
-        .machine-box.running { background-color: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
-        .machine-box.idle { background-color: #f8fafc; border-color: #e2e8f0; color: #64748b; }
-        .machine-box.error { background-color: #fff1f2; border-color: #fecdd3; color: #9f1239; animation: pulse 2s infinite; }
+        .machine-box:hover {
+            transform: scale(1.05);
+            z-index: 5;
+            box-shadow: var(--shadow-md);
+        }
+
+        .machine-box.running { background-color: var(--emerald-50); border-color: #a7f3d0; color: var(--emerald-600); }
+        .machine-box.idle { background-color: white; border-color: var(--slate-200); color: var(--slate-500); }
+        .machine-box.error { background-color: var(--rose-50); border-color: #fecdd3; color: var(--rose-500); animation: pulse 2s infinite; }
+
+        .machine-box .indicator {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+        .machine-box.running .indicator { background-color: var(--emerald-500); box-shadow: 0 0 8px var(--emerald-500); }
+        .machine-box.error .indicator { background-color: var(--rose-500); box-shadow: 0 0 8px var(--rose-500); }
 
         @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+            0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(244, 63, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
         }
 
         .hidden { display: none !important; }
 
         /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--slate-300); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--slate-400); }
+        ::-webkit-scrollbar-thumb { background: var(--slate-200); border-radius: 10px; border: 2px solid var(--slate-50); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--slate-300); }
+
+        /* Form Controls */
+        .form-control {
+            border-radius: 10px;
+            padding: 0.625rem 1rem;
+            border: 1px solid var(--slate-200);
+            font-size: 0.9375rem;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            border-color: var(--blue-600);
+        }
+
+        .btn {
+            border-radius: 10px;
+            font-weight: 600;
+            padding: 0.625rem 1.25rem;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--blue-600);
+            border-color: var(--blue-600);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--blue-700);
+            border-color: var(--blue-700);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+        }
+
+        .x-small { font-size: 0.75rem; }
+        .xx-small { font-size: 0.65rem; }
     </style>
 </head>
 <body>
@@ -313,47 +415,52 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="logo-box">
-                    <i data-lucide="cpu" style="width: 18px; height: 18px;"></i>
+                    <i data-lucide="cpu" style="width: 20px; height: 20px;"></i>
                 </div>
                 <span class="fw-bold text-white fs-5 sidebar-text">KnitOps Pro</span>
             </div>
-            <div class="flex-grow-1 mt-3">
+            <div class="flex-grow-1 mt-2">
+                <span class="nav-section-label">Main Menu</span>
                 <a href="#" class="nav-link active" data-tab="dashboard">
-                    <i data-lucide="layout-dashboard" style="width: 18px;"></i>
+                    <i data-lucide="layout-dashboard" style="width: 20px;"></i>
                     <span class="sidebar-text">Dashboard</span>
                 </a>
                 <a href="#" class="nav-link" data-tab="clients">
-                    <i data-lucide="users" style="width: 18px;"></i>
+                    <i data-lucide="users" style="width: 20px;"></i>
                     <span class="sidebar-text">Clients</span>
                 </a>
                 <a href="#" class="nav-link" data-tab="styles">
-                    <i data-lucide="palette" style="width: 18px;"></i>
+                    <i data-lucide="palette" style="width: 20px;"></i>
                     <span class="sidebar-text">Styles</span>
                 </a>
                 <a href="#" class="nav-link" data-tab="orders">
-                    <i data-lucide="shopping-cart" style="width: 18px;"></i>
+                    <i data-lucide="shopping-cart" style="width: 20px;"></i>
                     <span class="sidebar-text">Orders</span>
                 </a>
+
+                <span class="nav-section-label">Production</span>
                 <a href="#" class="nav-link" data-tab="knitting">
-                    <i data-lucide="cpu" style="width: 18px;"></i>
+                    <i data-lucide="cpu" style="width: 20px;"></i>
                     <span class="sidebar-text">Knitting</span>
                 </a>
                 <a href="#" class="nav-link" data-tab="quality">
-                    <i data-lucide="shield-check" style="width: 18px;"></i>
+                    <i data-lucide="shield-check" style="width: 20px;"></i>
                     <span class="sidebar-text">Quality</span>
                 </a>
                 <a href="#" class="nav-link" data-tab="packaging">
-                    <i data-lucide="package" style="width: 18px;"></i>
+                    <i data-lucide="package" style="width: 20px;"></i>
                     <span class="sidebar-text">Packaging</span>
                 </a>
+
+                <span class="nav-section-label">Insights</span>
                 <a href="#" class="nav-link" data-tab="reports">
-                    <i data-lucide="bar-chart-3" style="width: 18px;"></i>
+                    <i data-lucide="bar-chart-3" style="width: 20px;"></i>
                     <span class="sidebar-text">Reports</span>
                 </a>
             </div>
-            <div class="p-3 border-top border-secondary">
+            <div class="p-3 border-top border-secondary" style="border-color: rgba(255,255,255,0.05) !important;">
                 <a href="#" class="nav-link text-danger" id="logout-btn">
-                    <i data-lucide="log-out" style="width: 18px;"></i>
+                    <i data-lucide="log-out" style="width: 20px;"></i>
                     <span class="sidebar-text">Sign Out</span>
                 </a>
             </div>
@@ -597,9 +704,36 @@
                 </div>
 
                 <!-- Other tabs would be similar... -->
-                <div id="tab-quality" class="tab-content hidden"><h2 class="fw-bold">Quality Control</h2><p>Coming Soon...</p></div>
-                <div id="tab-packaging" class="tab-content hidden"><h2 class="fw-bold">Packaging & Logistics</h2><p>Coming Soon...</p></div>
-                <div id="tab-reports" class="tab-content hidden"><h2 class="fw-bold">Production Intelligence</h2><p>Coming Soon...</p></div>
+                <div id="tab-quality" class="tab-content hidden">
+                    <div class="d-flex flex-column align-items-center justify-content-center py-5 text-center">
+                        <div class="icon-bg bg-blue-light mb-4" style="width: 80px; height: 80px; border-radius: 24px;">
+                            <i data-lucide="shield-check" style="width: 40px; height: 40px;"></i>
+                        </div>
+                        <h3 class="fw-bold mb-2">Quality Control</h3>
+                        <p class="text-muted max-w-md mx-auto" style="max-width: 400px;">Our quality inspection module is currently being calibrated. Check back soon for real-time defect tracking and batch certification.</p>
+                        <button class="btn btn-primary mt-4">Notify Me When Ready</button>
+                    </div>
+                </div>
+                <div id="tab-packaging" class="tab-content hidden">
+                    <div class="d-flex flex-column align-items-center justify-content-center py-5 text-center">
+                        <div class="icon-bg bg-amber-light mb-4" style="width: 80px; height: 80px; border-radius: 24px;">
+                            <i data-lucide="package" style="width: 40px; height: 40px;"></i>
+                        </div>
+                        <h3 class="fw-bold mb-2">Packaging & Logistics</h3>
+                        <p class="text-muted max-w-md mx-auto" style="max-width: 400px;">Streamline your shipping and inventory management. This module will integrate with your logistics partners for automated tracking.</p>
+                        <button class="btn btn-primary mt-4">View Roadmap</button>
+                    </div>
+                </div>
+                <div id="tab-reports" class="tab-content hidden">
+                    <div class="d-flex flex-column align-items-center justify-content-center py-5 text-center">
+                        <div class="icon-bg bg-emerald-light mb-4" style="width: 80px; height: 80px; border-radius: 24px;">
+                            <i data-lucide="bar-chart-3" style="width: 40px; height: 40px;"></i>
+                        </div>
+                        <h3 class="fw-bold mb-2">Production Intelligence</h3>
+                        <p class="text-muted max-w-md mx-auto" style="max-width: 400px;">Advanced analytics and AI-driven forecasting are in development. Get deep insights into your factory's performance and efficiency.</p>
+                        <button class="btn btn-primary mt-4">Request Early Access</button>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -755,7 +889,11 @@
                 const status = Math.random() > 0.8 ? 'idle' : Math.random() > 0.9 ? 'error' : 'running';
                 const box = document.createElement('div');
                 box.className = `machine-box ${status}`;
-                box.textContent = `M${i}`;
+                box.innerHTML = `
+                    <span class="indicator"></span>
+                    <span class="xx-small text-uppercase opacity-50 mb-1">M</span>
+                    <span>${i}</span>
+                `;
                 matrix.appendChild(box);
             }
         }
@@ -785,17 +923,25 @@
             const grid = document.getElementById('styles-grid');
             grid.innerHTML = styles.map(s => `
                 <div class="col-md-3">
-                    <div class="stat-card p-0 overflow-hidden">
+                    <div class="stat-card p-0 overflow-hidden border-0 shadow-sm">
                         <div class="position-relative" style="aspect-ratio: 4/3;">
                             <img src="${s.image}" class="w-100 h-100 object-fit-cover">
-                            <span class="position-absolute top-0 end-0 m-2 badge bg-white text-dark shadow-sm">${s.category}</span>
+                            <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity d-flex align-items-end p-3">
+                                <button class="btn btn-white btn-sm w-100 fw-bold">View Details</button>
+                            </div>
+                            <span class="position-absolute top-0 end-0 m-3 badge bg-white/90 backdrop-blur text-dark border-0 shadow-sm py-2 px-3 rounded-pill xx-small fw-bold text-uppercase">${s.category}</span>
                         </div>
-                        <div class="p-3">
-                            <p class="x-small fw-bold text-primary mb-1">${s.id}</p>
-                            <h6 class="fw-bold mb-3">${s.name}</h6>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="small text-muted"><i data-lucide="box" class="me-1" style="width: 12px;"></i>${s.yarn}</span>
-                                <a href="#" class="small fw-bold text-decoration-none">Specs</a>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <p class="xx-small fw-bold text-primary text-uppercase tracking-wider mb-1">${s.id}</p>
+                                    <h6 class="fw-bold mb-0 text-truncate" style="max-width: 160px;">${s.name}</h6>
+                                </div>
+                                <button class="btn btn-light btn-sm p-1 rounded-circle"><i data-lucide="heart" style="width: 14px;"></i></button>
+                            </div>
+                            <div class="d-flex align-items-center gap-2 mt-3 pt-3 border-top border-light">
+                                <div class="bg-light rounded p-1"><i data-lucide="layers" class="text-muted" style="width: 12px;"></i></div>
+                                <span class="xx-small text-muted fw-medium">${s.yarn}</span>
                             </div>
                         </div>
                     </div>
@@ -836,30 +982,49 @@
                 const card = document.createElement('div');
                 card.className = 'col-md-3';
                 card.innerHTML = `
-                    <div class="stat-card ${status === 'error' ? 'border-danger bg-danger-subtle' : ''}">
-                        <div class="d-flex justify-content-between mb-3">
-                            <div>
-                                <h6 class="fw-bold mb-0">Machine M-${String(i).padStart(2, '0')}</h6>
-                                <p class="x-small text-muted mb-0">ID: KNIT-2024-${100 + i}</p>
+                    <div class="stat-card border-0 shadow-sm ${status === 'error' ? 'ring-1 ring-rose-500/20 bg-rose-50/30' : ''}">
+                        <div class="d-flex justify-content-between align-items-start mb-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="icon-bg ${status === 'running' ? 'bg-emerald-light' : status === 'idle' ? 'bg-light' : 'bg-rose-50'}">
+                                    <i data-lucide="cpu" style="width: 20px;"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold mb-0">Unit M-${String(i).padStart(2, '0')}</h6>
+                                    <p class="xx-small text-muted mb-0">KNIT-2024-${100 + i}</p>
+                                </div>
                             </div>
                             <span class="status-pill ${status === 'running' ? 'pill-emerald' : status === 'idle' ? 'pill-slate' : 'pill-danger'}">${status}</span>
                         </div>
-                        <div class="row g-2 mb-3">
+                        
+                        <div class="row g-3 mb-4">
                             <div class="col-6">
-                                <p class="x-small fw-bold text-muted text-uppercase mb-1">Speed</p>
-                                <p class="fw-bold mb-0">${status === 'running' ? speed + ' RPM' : '0 RPM'}</p>
+                                <div class="p-2 rounded bg-light/50">
+                                    <p class="xx-small fw-bold text-muted text-uppercase mb-1">Speed</p>
+                                    <p class="fw-bold mb-0 h6">${status === 'running' ? speed : '0'}<span class="x-small fw-normal opacity-50 ms-1">RPM</span></p>
+                                </div>
                             </div>
                             <div class="col-6">
-                                <p class="x-small fw-bold text-muted text-uppercase mb-1">Efficiency</p>
-                                <p class="fw-bold mb-0">${status === 'running' ? efficiency + '%' : '0%'}</p>
+                                <div class="p-2 rounded bg-light/50">
+                                    <p class="xx-small fw-bold text-muted text-uppercase mb-1">Efficiency</p>
+                                    <p class="fw-bold mb-0 h6">${status === 'running' ? efficiency : '0'}<span class="x-small fw-normal opacity-50 ms-1">%</span></p>
+                                </div>
                             </div>
                         </div>
-                        <div class="progress mb-2" style="height: 4px;">
-                            <div class="progress-bar" style="width: ${status === 'running' ? '74%' : '0%'}"></div>
+                        
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="xx-small fw-bold text-muted">BATCH PROGRESS</span>
+                                <span class="xx-small fw-bold text-primary">${status === 'running' ? '74%' : '0%'}</span>
+                            </div>
+                            <div class="progress" style="height: 6px; border-radius: 10px; background-color: var(--slate-100);">
+                                <div class="progress-bar ${status === 'error' ? 'bg-danger' : 'bg-primary'}" 
+                                     style="width: ${status === 'running' ? '74%' : '0%'}; border-radius: 10px;"></div>
+                            </div>
                         </div>
-                        <div class="d-flex gap-2 mt-3">
-                            <button class="btn btn-light btn-sm flex-grow-1 x-small fw-bold">Details</button>
-                            <button class="btn btn-light btn-sm flex-grow-1 x-small fw-bold">Settings</button>
+                        
+                        <div class="d-flex gap-2 pt-2">
+                            <button class="btn btn-light btn-sm flex-grow-1 xx-small fw-bold border-0">DIAGNOSTICS</button>
+                            <button class="btn btn-light btn-sm flex-grow-1 xx-small fw-bold border-0">CONTROLS</button>
                         </div>
                     </div>
                 `;
