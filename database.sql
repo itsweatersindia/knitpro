@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS machines (
 
 -- Insert Sample Data
 INSERT INTO users (name, email, password, role) VALUES 
-('John Doe', 'admin@knitops.pro', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin'); -- password: password123
+('John Doe', 'admin@knitops.pro', '482c352bb3667db062522f1e271d1947', 'admin'); -- password: password123
 
 INSERT INTO clients (name, region, email, contact_person, status) VALUES 
 ('Nordic Apparel Group', 'Oslo, Norway', 'contact@nordic.com', 'Erik Hansen', 'Active'),
