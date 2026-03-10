@@ -1,13 +1,871 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KnitOps Pro - Industrial Management</title>
+    <!-- Bootstrap 5.3.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons (via CDN) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-300: #cbd5e1;
+            --slate-400: #94a3b8;
+            --slate-500: #64748b;
+            --slate-600: #475569;
+            --slate-700: #334155;
+            --slate-800: #1e293b;
+            --slate-900: #0f172a;
+            --blue-600: #2563eb;
+            --blue-700: #1d4ed8;
+            --emerald-500: #10b981;
+            --rose-500: #f43f5e;
+            --amber-500: #f59e0b;
+        }
 
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--slate-50);
+            color: var(--slate-900);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Login Styles */
+        #login-screen {
+            background-color: var(--slate-900);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #login-screen::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 40%;
+            height: 40%;
+            background: rgba(37, 99, 235, 0.2);
+            filter: blur(120px);
+            border-radius: 50%;
+        }
+
+        #login-screen::after {
+            content: '';
+            position: absolute;
+            bottom: -10%;
+            right: -10%;
+            width: 40%;
+            height: 40%;
+            background: rgba(79, 70, 229, 0.2);
+            filter: blur(120px);
+            border-radius: 50%;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 400px;
+            padding: 2.5rem;
+            z-index: 10;
+            border: 1px solid var(--slate-200);
+        }
+
+        /* App Layout */
+        #app-container {
+            display: none;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: var(--slate-900);
+            color: var(--slate-300);
+            display: flex;
+            flex-row: column;
+            transition: width 0.3s ease;
+            flex-shrink: 0;
+            height: 100%;
+        }
+
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-box {
+            width: 32px;
+            height: 32px;
+            background-color: var(--blue-600);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .nav-link {
+            color: var(--slate-400);
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin: 0.25rem 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background-color: var(--slate-800);
+            color: white;
+        }
+
+        .nav-link.active {
+            background-color: var(--blue-600);
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.3);
+        }
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            height: 64px;
+            background: white;
+            border-bottom: 1px solid var(--slate-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        /* Utility Classes */
+        .stat-card {
+            background: white;
+            border: 1px solid var(--slate-200);
+            border-radius: 1rem;
+            padding: 1.25rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .icon-bg {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bg-blue-light { background-color: #eff6ff; color: var(--blue-600); }
+        .bg-emerald-light { background-color: #ecfdf5; color: var(--emerald-500); }
+        .bg-amber-light { background-color: #fffbeb; color: var(--amber-500); }
+        .bg-purple-light { background-color: #faf5ff; color: #9333ea; }
+
+        .table-container {
+            background: white;
+            border: 1px solid var(--slate-200);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .table thead th {
+            background-color: var(--slate-50);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--slate-500);
+            padding: 1rem;
+            border-bottom: 1px solid var(--slate-200);
+        }
+
+        .table tbody td {
+            padding: 1rem;
+            font-size: 0.875rem;
+            vertical-align: middle;
+        }
+
+        .status-pill {
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.625rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .pill-emerald { background-color: #dcfce7; color: #166534; }
+        .pill-amber { background-color: #fef3c7; color: #92400e; }
+        .pill-blue { background-color: #dbeafe; color: #1e40af; }
+        .pill-slate { background-color: #f1f5f9; color: #475569; }
+
+        .machine-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .machine-box {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            border: 1px solid var(--slate-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.625rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .machine-box.running { background-color: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+        .machine-box.idle { background-color: #f8fafc; border-color: #e2e8f0; color: #64748b; }
+        .machine-box.error { background-color: #fff1f2; border-color: #fecdd3; color: #9f1239; animation: pulse 2s infinite; }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .hidden { display: none !important; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--slate-300); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--slate-400); }
+    </style>
+</head>
+<body>
+
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <div class="login-card">
+            <div class="text-center mb-4">
+                <div class="logo-box mx-auto mb-3" style="width: 64px; height: 64px;">
+                    <i data-lucide="cpu" style="width: 32px; height: 32px;"></i>
+                </div>
+                <h2 class="fw-bold mb-1">KnitOps Pro</h2>
+                <p class="text-muted small">Sign in to manage your knitting unit</p>
+            </div>
+            <form id="login-form">
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Email Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i data-lucide="mail" class="text-muted" style="width: 18px;"></i></span>
+                        <input type="email" class="form-control bg-light border-start-0" value="admin@knitops.pro" required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between">
+                        <label class="form-label small fw-bold">Password</label>
+                        <a href="#" class="small text-decoration-none fw-bold">Forgot?</a>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i data-lucide="lock" class="text-muted" style="width: 18px;"></i></span>
+                        <input type="password" class="form-control bg-light border-start-0" value="password123" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">Sign In</button>
+            </form>
+            <p class="text-center mt-4 small text-muted">Don't have an account? <a href="#" class="fw-bold text-decoration-none">Contact Admin</a></p>
+        </div>
+    </div>
+
+    <!-- App Container -->
+    <div id="app-container" class="d-flex">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-box">
+                    <i data-lucide="cpu" style="width: 18px; height: 18px;"></i>
+                </div>
+                <span class="fw-bold text-white fs-5 sidebar-text">KnitOps Pro</span>
+            </div>
+            <div class="flex-grow-1 mt-3">
+                <a href="#" class="nav-link active" data-tab="dashboard">
+                    <i data-lucide="layout-dashboard" style="width: 18px;"></i>
+                    <span class="sidebar-text">Dashboard</span>
+                </a>
+                <a href="#" class="nav-link" data-tab="clients">
+                    <i data-lucide="users" style="width: 18px;"></i>
+                    <span class="sidebar-text">Clients</span>
+                </a>
+                <a href="#" class="nav-link" data-tab="styles">
+                    <i data-lucide="palette" style="width: 18px;"></i>
+                    <span class="sidebar-text">Styles</span>
+                </a>
+                <a href="#" class="nav-link" data-tab="orders">
+                    <i data-lucide="shopping-cart" style="width: 18px;"></i>
+                    <span class="sidebar-text">Orders</span>
+                </a>
+                <a href="#" class="nav-link" data-tab="knitting">
+                    <i data-lucide="cpu" style="width: 18px;"></i>
+                    <span class="sidebar-text">Knitting</span>
+                </a>
+                <a href="#" class="nav-link" data-tab="quality">
+                    <i data-lucide="shield-check" style="width: 18px;"></i>
+                    <span class="sidebar-text">Quality</span>
+                </a>
+                <a href="#" class="nav-link" data-tab="packaging">
+                    <i data-lucide="package" style="width: 18px;"></i>
+                    <span class="sidebar-text">Packaging</span>
+                </a>
+                <a href="#" class="nav-link" data-tab="reports">
+                    <i data-lucide="bar-chart-3" style="width: 18px;"></i>
+                    <span class="sidebar-text">Reports</span>
+                </a>
+            </div>
+            <div class="p-3 border-top border-secondary">
+                <a href="#" class="nav-link text-danger" id="logout-btn">
+                    <i data-lucide="log-out" style="width: 18px;"></i>
+                    <span class="sidebar-text">Sign Out</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-light btn-sm" id="toggle-sidebar">
+                        <i data-lucide="menu" style="width: 18px;"></i>
+                    </button>
+                    <div class="d-none d-md-flex align-items-center gap-2 text-muted small">
+                        <span>Production</span>
+                        <i data-lucide="chevron-right" style="width: 14px;"></i>
+                        <span class="text-dark fw-medium" id="current-tab-label">Dashboard</span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="position-relative d-none d-sm-block">
+                        <i data-lucide="search" class="position-absolute text-muted" style="width: 14px; left: 12px; top: 10px;"></i>
+                        <input type="text" class="form-control form-control-sm ps-5 bg-light border-0" placeholder="Search..." style="width: 200px;">
+                    </div>
+                    <button class="btn btn-light btn-sm position-relative">
+                        <i data-lucide="bell" style="width: 18px;"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+                    </button>
+                    <div class="vr mx-2"></div>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="text-end d-none d-sm-block">
+                            <p class="mb-0 fw-bold small">John Doe</p>
+                            <p class="mb-0 text-muted" style="font-size: 10px;">Floor Manager</p>
+                        </div>
+                        <div class="bg-light rounded-circle d-flex align-items-center justify-center border" style="width: 36px; height: 36px;">
+                            <i data-lucide="user" class="text-muted" style="width: 18px;"></i>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <!-- Dashboard Tab -->
+                <div id="tab-dashboard" class="tab-content">
+                    <div class="d-flex justify-content-between align-items-end mb-4">
+                        <div>
+                            <h2 class="fw-bold mb-1">Elite Knitting Unit</h2>
+                            <p class="text-muted mb-0">Real-time floor overview and performance metrics</p>
+                        </div>
+                        <div class="bg-white border rounded-pill px-3 py-1 d-flex align-items-center gap-2 shadow-sm">
+                            <div class="rounded-circle bg-success" style="width: 8px; height: 8px;"></div>
+                            <span class="small fw-medium">System Live</span>
+                        </div>
+                    </div>
+
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <div class="icon-bg bg-blue-light"><i data-lucide="cpu" style="width: 20px;"></i></div>
+                                    <span class="text-muted small">Live</span>
+                                </div>
+                                <p class="text-muted small mb-1">Active Machines</p>
+                                <h3 class="fw-bold mb-1">42/48</h3>
+                                <p class="text-muted x-small mb-0">87.5% Efficiency</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <div class="icon-bg bg-emerald-light"><i data-lucide="box" style="width: 20px;"></i></div>
+                                    <span class="text-muted small">Live</span>
+                                </div>
+                                <p class="text-muted small mb-1">Today's Production</p>
+                                <h3 class="fw-bold mb-1">1,284 kg</h3>
+                                <p class="text-emerald-500 x-small mb-0">+12% from avg</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <div class="icon-bg bg-amber-light"><i data-lucide="shield-check" style="width: 20px;"></i></div>
+                                    <span class="text-muted small">Live</span>
+                                </div>
+                                <p class="text-muted small mb-1">Quality Score</p>
+                                <h3 class="fw-bold mb-1">98.2%</h3>
+                                <p class="text-muted x-small mb-0">0.8% Rejection</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <div class="icon-bg bg-purple-light"><i data-lucide="package" style="width: 20px;"></i></div>
+                                    <span class="text-muted small">Live</span>
+                                </div>
+                                <p class="text-muted small mb-1">Pending Orders</p>
+                                <h3 class="fw-bold mb-1">18</h3>
+                                <p class="text-muted x-small mb-0">4 due this week</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-lg-8">
+                            <div class="table-container p-4">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h5 class="fw-bold mb-0">Machine Status Matrix</h5>
+                                    <button class="btn btn-link btn-sm text-decoration-none fw-bold">View All</button>
+                                </div>
+                                <div class="machine-grid" id="machine-matrix">
+                                    <!-- Generated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="table-container p-4">
+                                <h5 class="fw-bold mb-4">Recent Alerts</h5>
+                                <div class="d-flex flex-column gap-3">
+                                    <div class="d-flex gap-3">
+                                        <div class="rounded-circle bg-danger mt-1" style="width: 8px; height: 8px; flex-shrink: 0;"></div>
+                                        <div>
+                                            <p class="mb-0 small fw-bold">Yarn break on M-08</p>
+                                            <p class="mb-0 x-small text-muted">2m ago</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-3">
+                                        <div class="rounded-circle bg-warning mt-1" style="width: 8px; height: 8px; flex-shrink: 0;"></div>
+                                        <div>
+                                            <p class="mb-0 small fw-bold">M-14 maintenance due</p>
+                                            <p class="mb-0 x-small text-muted">15m ago</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-3">
+                                        <div class="rounded-circle bg-success mt-1" style="width: 8px; height: 8px; flex-shrink: 0;"></div>
+                                        <div>
+                                            <p class="mb-0 small fw-bold">Batch #842 completed</p>
+                                            <p class="mb-0 x-small text-muted">45m ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-light w-100 mt-4 py-2 small fw-bold">Notification Center</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clients Tab -->
+                <div id="tab-clients" class="tab-content hidden">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h2 class="fw-bold mb-1">Client Directory</h2>
+                            <p class="text-muted mb-0">Manage customer profiles and partnership history</p>
+                        </div>
+                        <button class="btn btn-primary fw-bold d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#addClientModal">
+                            <i data-lucide="plus" style="width: 18px;"></i>
+                            Add New Client
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Client Name</th>
+                                    <th>Region</th>
+                                    <th>Active Orders</th>
+                                    <th>Total Value</th>
+                                    <th>Status</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="clients-table-body">
+                                <!-- Data rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Styles Tab -->
+                <div id="tab-styles" class="tab-content hidden">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h2 class="fw-bold mb-1">Style Library</h2>
+                            <p class="text-muted mb-0">Technical specifications and design catalog</p>
+                        </div>
+                        <button class="btn btn-primary fw-bold d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#addStyleModal">
+                            <i data-lucide="plus" style="width: 18px;"></i>
+                            Create New Style
+                        </button>
+                    </div>
+                    <div class="row g-4" id="styles-grid">
+                        <!-- Style Cards -->
+                    </div>
+                </div>
+
+                <!-- Orders Tab -->
+                <div id="tab-orders" class="tab-content hidden">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h2 class="fw-bold mb-1">Order Management</h2>
+                            <p class="text-muted mb-0">Track production lifecycle from order to delivery</p>
+                        </div>
+                        <button class="btn btn-primary fw-bold d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#addOrderModal">
+                            <i data-lucide="shopping-cart" style="width: 18px;"></i>
+                            New Order
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Client</th>
+                                    <th>Style</th>
+                                    <th>Quantity</th>
+                                    <th>Deadline</th>
+                                    <th>Status</th>
+                                    <th class="text-end">Progress</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-table-body">
+                                <!-- Order rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Knitting Tab -->
+                <div id="tab-knitting" class="tab-content hidden">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h2 class="fw-bold mb-1">Machine Floor Overview</h2>
+                            <p class="text-muted mb-0">Real-time machine performance and speed tracking</p>
+                        </div>
+                        <button class="btn btn-success fw-bold d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#initiateJobModal">
+                            <i data-lucide="plus" style="width: 18px;"></i>
+                            Initiate New Job
+                        </button>
+                    </div>
+                    <div class="row g-4" id="knitting-floor-grid">
+                        <!-- Machine Cards -->
+                    </div>
+                </div>
+
+                <!-- Other tabs would be similar... -->
+                <div id="tab-quality" class="tab-content hidden"><h2 class="fw-bold">Quality Control</h2><p>Coming Soon...</p></div>
+                <div id="tab-packaging" class="tab-content hidden"><h2 class="fw-bold">Packaging & Logistics</h2><p>Coming Soon...</p></div>
+                <div id="tab-reports" class="tab-content hidden"><h2 class="fw-bold">Production Intelligence</h2><p>Coming Soon...</p></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal fade" id="addClientModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 1.5rem;">
+                <div class="modal-header border-0 p-4 pb-0">
+                    <h5 class="modal-title fw-bold">Add New Client</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="add-client-form">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Client Name</label>
+                            <input type="text" class="form-control bg-light border-0" placeholder="e.g. Nordic Apparel Group" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Region</label>
+                            <input type="text" class="form-control bg-light border-0" placeholder="e.g. Oslo, Norway" required>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="form-label small fw-bold text-muted text-uppercase">Email</label>
+                                <input type="email" class="form-control bg-light border-0" placeholder="contact@client.com">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-bold text-muted text-uppercase">Contact Person</label>
+                                <input type="text" class="form-control bg-light border-0" placeholder="Name">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-4 py-2 fw-bold">Save Client Profile</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5.3.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- App Logic (Vanilla JS) -->
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // State
+        let currentUser = null;
+        const clients = [
+            { name: 'Nordic Apparel Group', region: 'Oslo, Norway', orders: 5, value: '$45,200', status: 'Active' },
+            { name: 'Urban Threads Co.', region: 'New York, USA', orders: 2, value: '$12,800', status: 'Active' },
+            { name: 'Silk Road Textiles', region: 'Istanbul, Turkey', orders: 0, value: '$84,000', status: 'Inactive' },
+            { name: 'Alpine Sportswear', region: 'Zurich, Switzerland', orders: 8, value: '$112,500', status: 'Active' },
+            { name: 'Pacific Knits', region: 'Sydney, Australia', orders: 1, value: '$5,400', status: 'Active' },
+        ];
+
+        const styles = [
+            { id: 'ST-2024-001', name: 'Classic Crewneck', category: 'Sweater', yarn: 'Cotton 40s', image: 'https://picsum.photos/seed/sweater1/400/300' },
+            { id: 'ST-2024-002', name: 'V-Neck Pullover', category: 'Knitwear', yarn: 'Merino Wool', image: 'https://picsum.photos/seed/sweater2/400/300' },
+            { id: 'ST-2024-003', name: 'Ribbed Cardigan', category: 'Outerwear', yarn: 'Acrylic Blend', image: 'https://picsum.photos/seed/sweater3/400/300' },
+            { id: 'ST-2024-004', name: 'Turtleneck Slim', category: 'Sweater', yarn: 'Cashmere', image: 'https://picsum.photos/seed/sweater4/400/300' },
+        ];
+
+        const orders = [
+            { id: 'ORD-2024-001', client: 'Nordic Apparel', style: 'ST-001', qty: '2,500 pcs', deadline: 'Mar 25', status: 'Knitting', progress: 65 },
+            { id: 'ORD-2024-002', client: 'Urban Threads', style: 'ST-004', qty: '1,200 pcs', deadline: 'Apr 02', status: 'Pending', progress: 0 },
+            { id: 'ORD-2024-003', client: 'Alpine Sport', style: 'ST-002', qty: '5,000 pcs', deadline: 'Mar 18', status: 'Quality', progress: 92 },
+            { id: 'ORD-2024-004', client: 'Pacific Knits', style: 'ST-005', qty: '800 pcs', deadline: 'Apr 10', status: 'Ready', progress: 100 },
+        ];
+
+        // UI Elements
+        const loginScreen = document.getElementById('login-screen');
+        const appContainer = document.getElementById('app-container');
+        const loginForm = document.getElementById('login-form');
+        const logoutBtn = document.getElementById('logout-btn');
+        const toggleSidebar = document.getElementById('toggle-sidebar');
+        const sidebar = document.getElementById('sidebar');
+        const navLinks = document.querySelectorAll('.nav-link[data-tab]');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const currentTabLabel = document.getElementById('current-tab-label');
+
+        // Login Logic
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Signing In...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                currentUser = { name: 'John Doe', role: 'Floor Manager' };
+                loginScreen.style.display = 'none';
+                appContainer.style.display = 'flex';
+                renderAll();
+                lucide.createIcons();
+            }, 1000);
+        });
+
+        // Logout Logic
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            currentUser = null;
+            appContainer.style.display = 'none';
+            loginScreen.style.display = 'flex';
+            const btn = loginForm.querySelector('button');
+            btn.innerHTML = 'Sign In';
+            btn.disabled = false;
+        });
+
+        // Sidebar Logic
+        toggleSidebar.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            const icon = toggleSidebar.querySelector('i');
+            if (sidebar.classList.contains('collapsed')) {
+                icon.setAttribute('data-lucide', 'menu');
+            } else {
+                icon.setAttribute('data-lucide', 'x');
+            }
+            lucide.createIcons();
+        });
+
+        // Navigation Logic
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tabId = link.getAttribute('data-tab');
+                
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+
+                tabContents.forEach(content => content.classList.add('hidden'));
+                document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+                
+                currentTabLabel.textContent = link.querySelector('.sidebar-text').textContent;
+                lucide.createIcons();
+            });
+        });
+
+        // Render Functions
+        function renderAll() {
+            renderDashboard();
+            renderClients();
+            renderStyles();
+            renderOrders();
+            renderKnitting();
+        }
+
+        function renderDashboard() {
+            const matrix = document.getElementById('machine-matrix');
+            matrix.innerHTML = '';
+            for (let i = 1; i <= 32; i++) {
+                const status = Math.random() > 0.8 ? 'idle' : Math.random() > 0.9 ? 'error' : 'running';
+                const box = document.createElement('div');
+                box.className = `machine-box ${status}`;
+                box.textContent = `M${i}`;
+                matrix.appendChild(box);
+            }
+        }
+
+        function renderClients() {
+            const body = document.getElementById('clients-table-body');
+            body.innerHTML = clients.map(c => `
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center fw-bold text-muted small" style="width: 32px; height: 32px;">
+                                ${c.name.split(' ').map(n => n[0]).join('')}
+                            </div>
+                            <span class="fw-medium">${c.name}</span>
+                        </div>
+                    </td>
+                    <td class="text-muted">${c.region}</td>
+                    <td class="font-monospace">${c.orders}</td>
+                    <td class="font-monospace">${c.value}</td>
+                    <td><span class="status-pill ${c.status === 'Active' ? 'pill-emerald' : 'pill-slate'}">${c.status}</span></td>
+                    <td class="text-end"><button class="btn btn-light btn-sm"><i data-lucide="more-vertical" style="width: 14px;"></i></button></td>
+                </tr>
+            `).join('');
+        }
+
+        function renderStyles() {
+            const grid = document.getElementById('styles-grid');
+            grid.innerHTML = styles.map(s => `
+                <div class="col-md-3">
+                    <div class="stat-card p-0 overflow-hidden">
+                        <div class="position-relative" style="aspect-ratio: 4/3;">
+                            <img src="${s.image}" class="w-100 h-100 object-fit-cover">
+                            <span class="position-absolute top-0 end-0 m-2 badge bg-white text-dark shadow-sm">${s.category}</span>
+                        </div>
+                        <div class="p-3">
+                            <p class="x-small fw-bold text-primary mb-1">${s.id}</p>
+                            <h6 class="fw-bold mb-3">${s.name}</h6>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="small text-muted"><i data-lucide="box" class="me-1" style="width: 12px;"></i>${s.yarn}</span>
+                                <a href="#" class="small fw-bold text-decoration-none">Specs</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderOrders() {
+            const body = document.getElementById('orders-table-body');
+            body.innerHTML = orders.map(o => `
+                <tr>
+                    <td class="fw-bold">${o.id}</td>
+                    <td class="text-muted">${o.client}</td>
+                    <td class="text-muted">${o.style}</td>
+                    <td class="font-monospace">${o.qty}</td>
+                    <td class="text-muted small"><i data-lucide="calendar" class="me-2" style="width: 12px;"></i>${o.deadline}</td>
+                    <td><span class="status-pill pill-blue">${o.status}</span></td>
+                    <td class="text-end">
+                        <div class="d-flex align-items-center justify-content-end gap-2">
+                            <span class="x-small fw-bold text-muted">${o.progress}%</span>
+                            <div class="progress" style="height: 4px; width: 60px;">
+                                <div class="progress-bar bg-primary" style="width: ${o.progress}%"></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderKnitting() {
+            const grid = document.getElementById('knitting-floor-grid');
+            grid.innerHTML = '';
+            for (let i = 1; i <= 12; i++) {
+                const speed = 220 + Math.floor(Math.random() * 40);
+                const efficiency = 85 + Math.floor(Math.random() * 10);
+                const status = i === 5 ? 'error' : i === 8 ? 'idle' : 'running';
+                
+                const card = document.createElement('div');
+                card.className = 'col-md-3';
+                card.innerHTML = `
+                    <div class="stat-card ${status === 'error' ? 'border-danger bg-danger-subtle' : ''}">
+                        <div class="d-flex justify-content-between mb-3">
+                            <div>
+                                <h6 class="fw-bold mb-0">Machine M-${String(i).padStart(2, '0')}</h6>
+                                <p class="x-small text-muted mb-0">ID: KNIT-2024-${100 + i}</p>
+                            </div>
+                            <span class="status-pill ${status === 'running' ? 'pill-emerald' : status === 'idle' ? 'pill-slate' : 'pill-danger'}">${status}</span>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <p class="x-small fw-bold text-muted text-uppercase mb-1">Speed</p>
+                                <p class="fw-bold mb-0">${status === 'running' ? speed + ' RPM' : '0 RPM'}</p>
+                            </div>
+                            <div class="col-6">
+                                <p class="x-small fw-bold text-muted text-uppercase mb-1">Efficiency</p>
+                                <p class="fw-bold mb-0">${status === 'running' ? efficiency + '%' : '0%'}</p>
+                            </div>
+                        </div>
+                        <div class="progress mb-2" style="height: 4px;">
+                            <div class="progress-bar" style="width: ${status === 'running' ? '74%' : '0%'}"></div>
+                        </div>
+                        <div class="d-flex gap-2 mt-3">
+                            <button class="btn btn-light btn-sm flex-grow-1 x-small fw-bold">Details</button>
+                            <button class="btn btn-light btn-sm flex-grow-1 x-small fw-bold">Settings</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            }
+        }
+    </script>
+</body>
+</html>
